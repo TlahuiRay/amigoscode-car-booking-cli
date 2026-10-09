@@ -1,15 +1,19 @@
 package com.tlahui;
 
 import com.tlahui.booking.CarBookingService;
+import com.tlahui.car.Car;
 import com.tlahui.car.CarService;
+import com.tlahui.user.User;
 import com.tlahui.user.UserService;
 
+import java.lang.reflect.Array;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         boolean keepGoing = true;
         Scanner scanner = new Scanner(System.in);
+
         CarService carService = new CarService();
         CarBookingService carBookingService = new CarBookingService();
         UserService userService = new UserService();
@@ -35,11 +39,11 @@ public class Main {
                     break;
                 case "3" : viewAllBookings();
                     break;
-                case "4" : viewAvailableCars(false);
+                case "4" : viewAvailableCars(carService, false);
                     break;
-                case "5" : viewAvailableCars(true);
+                case "5" : viewAvailableCars(carService, true);
                     break;
-                case "6" : viewAllUsers();
+                case "6" : viewAllUsers(userService);
                     break;
                 case "7" :
                     System.out.println("Exit, ByeBye");
@@ -62,13 +66,34 @@ public class Main {
         System.out.println("View All Bookings");
     }
 
-    private static void viewAvailableCars(boolean onlyElectric){
+    private static void viewAvailableCars(CarService carService, boolean onlyElectric){
         System.out.println("View All Available Cars ");
-        if(onlyElectric)
+        if(onlyElectric){
+            Car[] cars = carService.getAvailableElectricCars();
+            if(cars.length == 0)
+                System.out.println("Electric Cards Not found");
+            else{
+                for(Car car : cars)
+                    System.out.println(car.toString());
+            }
+
+        }
+        else{
+            Car[] cars = carService.getAvailableCars();
+            if(cars.length == 0)
+                System.out.println("Currently there's no Cars Available");
+            else{
+                for(Car car : cars)
+                    System.out.println(car.toString());
+            }
+        }
+
     }
 
-    private static void viewAllUsers(){
-        System.out.println("View all users");
+    private static void viewAllUsers(UserService userService){
+        for(User user : userService.getAllUsers()){
+            System.out.println(user.toString());
+        }
     }
 
 }

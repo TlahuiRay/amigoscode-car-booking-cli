@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public class UserDAO {
 
-    private static final User[] usersArray;
+    private static final User[] usersSeedDataArray;
 
     static {
-        usersArray = new User[]{
+        usersSeedDataArray = new User[]{
                 new User(1, "User1"),
                 new User(2, "User2"),
                 new User(3, "User3"),
@@ -21,6 +21,6 @@ public class UserDAO {
     }
 
     public User[] getUsers() {
-        return usersArray;
+        return usersSeedDataArray;
     }
 }
