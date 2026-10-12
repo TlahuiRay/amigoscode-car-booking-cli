@@ -30,4 +30,13 @@ public class CarService {
         return electricCars;
     }
 
+    public Car getCarByID(int id){
+        for(Car car : carDAO.getAllCars()){
+            if(car.getId() == id)
+                return car;
+        }
+        return null;
+
+    }
+
 }
