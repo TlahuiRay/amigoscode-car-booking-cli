@@ -14,4 +14,20 @@ public class CarBookingService {
     public void bookACar(Car car, User user){
         carBookingDAO.createBooking(car, user);
     }
+
+    public CarBooking getCarBookingByID(int id){
+        for (CarBooking carBooking : carBookingDAO.getCarBookings()){
+            if(carBooking.getBookingId() == id)
+                return carBooking;
+        }
+        return null;
+    }
+
+    public void deleteBooking(CarBooking carBooking){
+        carBookingDAO.deleteBooking(carBooking);
+    }
+
+    public CarBooking[] getCarBookingByUser(int selectedUserID) {
+        return carBookingDAO.getBookingByUser(selectedUserID);
+    }
 }
