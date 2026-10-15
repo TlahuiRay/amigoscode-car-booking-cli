@@ -45,9 +45,9 @@ public class Main {
                     break;
                 case "4" : deleteBooking(carBookingService, scanner);
                     break;
-                case "5" : viewAvailableCars(carService, false);
+                case "5" : viewAvailableCars(carService,  carBookingService,  false);
                     break;
-                case "6" : viewAvailableCars(carService, true);
+                case "6" : viewAvailableCars(carService, carBookingService, true);
                     break;
                 case "7" : viewAllUsers(userService);
                     break;
@@ -61,10 +61,11 @@ public class Main {
         }
     }
 
-    private static void bookCar(CarBookingService carBookingService, CarService carService, UserService userService,
+    private static void bookCar(CarBookingService carBookingService,CarService carService, UserService userService,
                                 Scanner scanner ){
         System.out.println("Book a Car");
-        Car[] cars = carService.getAvailableCars();
+        Car[] cars = carService.getAvailableCars(getAllBookedCars(carBookingService));
+        Car[] bookedCars = getAllBookedCars(carBookingService);
         int selectedCarID = -1;
         int selectedUserID = -1;
         boolean validInput = false;
@@ -85,7 +86,18 @@ public class Main {
                 System.out.println("Invalid input.Please enter an numeric value.");
                 scanner.nextLine();
             }
+
         }
+
+        //Verify Booked Cars
+        for (Car bookedCar : bookedCars) {
+            if (bookedCar.getId() == selectedCarID) {
+                System.out.println("You have selected a car that's already booked. Try a different car");
+                return;
+            }
+        }
+
+
         Car carToBook = carService.getCarByID(selectedCarID);
         if(Optional.ofNullable(carToBook).isEmpty()) {
             System.out.println("Selected car is not valid");
@@ -169,10 +181,10 @@ public class Main {
         carBookingService.deleteBooking(bookingToDelete);
     }
 
-    private static void viewAvailableCars(CarService carService, boolean onlyElectric){
+    private static void viewAvailableCars(CarService carService, CarBookingService carBookingService, boolean onlyElectric){
         System.out.println("View All Available Cars ");
         if(onlyElectric){
-            Car[] cars = carService.getAvailableElectricCars();
+            Car[] cars = carService.getAvailableElectricCars(carBookingService.getAllBookedCars());
             if(cars.length == 0)
                 System.out.println("Electric Cards Not found");
             else{
@@ -181,7 +193,7 @@ public class Main {
             }
         }
         else{
-            Car[] cars = carService.getAvailableCars();
+            Car[] cars = carService.getAvailableCars(carBookingService.getAllBookedCars());
             if(cars.length == 0)
                 System.out.println("Currently there's no Cars Available");
             else{
@@ -195,5 +207,9 @@ public class Main {
         for(User user : userService.getAllUsers()){
             System.out.println(user.toString());
         }
+    }
+
+    private static Car[] getAllBookedCars(CarBookingService carBookingService) {
+        return carBookingService.getAllBookedCars();
     }
 }

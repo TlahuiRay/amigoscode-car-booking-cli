@@ -80,4 +80,12 @@ public class CarBookingDAO {
         return bookings;
     }
 
+    public Car[] getAllBookedCars() {
+        Car[] bookedCars = new Car[carBookingsArray.length];
+        for(int i = 0; i < carBookingsArray.length; i++){
+            bookedCars[i] = carBookingsArray[i].getCar();
+        }
+        return bookedCars;
+
+    }
 }

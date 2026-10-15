@@ -30,4 +30,8 @@ public class CarBookingService {
     public CarBooking[] getCarBookingByUser(int selectedUserID) {
         return carBookingDAO.getBookingByUser(selectedUserID);
     }
+
+    public Car[] getAllBookedCars() {
+        return carBookingDAO.getAllBookedCars();
+    }
 }
