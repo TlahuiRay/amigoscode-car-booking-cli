@@ -7,7 +7,6 @@ import com.tlahui.car.CarService;
 import com.tlahui.user.User;
 import com.tlahui.user.UserService;
 
-import java.lang.reflect.Array;
 import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
@@ -81,6 +80,7 @@ public class Main {
                 for(Car car : cars)
                     System.out.println(car.toString());
                 selectedCarID = scanner.nextInt();
+                scanner.nextLine();
                 validInput = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input.Please enter an numeric value.");
@@ -111,6 +111,7 @@ public class Main {
                 for(User user : userService.getAllUsers())
                     System.out.println(user.toString());
                 selectedUserID = scanner.nextInt();
+                scanner.nextLine();
                 validInput = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an numeric value.");
@@ -124,7 +125,7 @@ public class Main {
         }
 
         carBookingService.bookACar(carToBook, userToBook);
-        System.out.println("User: " + userToBook.toString() +"\nHas successfully booked Car: " + carToBook.toString());
+        System.out.println("User: " + userToBook.toString() +"\nHas successfully booked Car: " + carToBook.toString()+"\n");
     }
     private static void viewAllUserBookedCars(CarBookingService carBookingService, UserService userService, Scanner scanner){
         boolean validInput = false;
@@ -136,6 +137,7 @@ public class Main {
                 for(User user : userService.getAllUsers())
                     System.out.println(user.toString());
                 selectedUserID = scanner.nextInt();
+                scanner.nextLine();
                 validInput = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an numeric value.");
@@ -155,23 +157,39 @@ public class Main {
     }
 
     private static void viewAllBookings(CarBookingService carBookingService){
-        System.out.println("View All Bookings");
-        for(CarBooking carBooking : carBookingService.getAllBookings()){
+        CarBooking[] carBookings = carBookingService.getAllBookings();
+        if(carBookings.length == 0){
+            System.out.println("Currently there's no bookings");
+            return;
+        }
+        for(CarBooking carBooking : carBookings){
             System.out.println(carBooking.toString());
         }
     }
 
     private static void deleteBooking(CarBookingService carBookingService, Scanner scanner){
         CarBooking[] carBookings = carBookingService.getAllBookings();
+        int selectedBooking = -1;
+        boolean validInput = false;
         if(carBookings.length == 0){
             System.out.println("Currently there's no bookings");
             return;
         }
+
         System.out.println("Select the ID of an existing Booking from the list: ");
-        for(CarBooking carBooking : carBookings){
-            System.out.println(carBooking.toString());
+        while (!validInput) {
+            try {
+                for(CarBooking carBooking : carBookings){
+                    System.out.println(carBooking.toString());
+                }
+                selectedBooking = scanner.nextInt();
+                scanner.nextLine();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an numeric value.");
+                scanner.nextLine();
+            }
         }
-        int selectedBooking = scanner.nextInt();
         CarBooking bookingToDelete = carBookingService.getCarBookingByID(selectedBooking);
 
         if(Optional.ofNullable(bookingToDelete).isEmpty()) {
@@ -179,6 +197,7 @@ public class Main {
             return;
         }
         carBookingService.deleteBooking(bookingToDelete);
+        System.out.println("Booking Was Successfully Deleted");
     }
 
     private static void viewAvailableCars(CarService carService, CarBookingService carBookingService, boolean onlyElectric){
@@ -186,7 +205,7 @@ public class Main {
         if(onlyElectric){
             Car[] cars = carService.getAvailableElectricCars(carBookingService.getAllBookedCars());
             if(cars.length == 0)
-                System.out.println("Electric Cards Not found");
+                System.out.println("Electric Cars Not found");
             else{
                 for(Car car : cars)
                     System.out.println(car.toString());
