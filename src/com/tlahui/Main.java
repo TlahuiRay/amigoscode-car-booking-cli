@@ -11,9 +11,11 @@ import com.tlahui.user.UserService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
@@ -69,10 +71,8 @@ public class Main {
         System.out.println("Book a Car");
         Car[] cars = carService.getAvailableCars(getAllBookedCars(carBookingService));
         Car[] bookedCars = getAllBookedCars(carBookingService);
-        String selectedCarID = "";
-        String selectedUserID = "";
-        String startDateStr = "";
-        String endDateStr = "";
+        String selectedCarID = "", selectedUserID = "";
+        String startDateStr = "", endDateStr = "";;
         LocalDate startDate = null, endDate = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         boolean validInput = false;
