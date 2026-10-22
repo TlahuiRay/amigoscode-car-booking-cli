@@ -6,10 +6,10 @@ import com.tlahui.user.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class CarBookingDAO {
     private static CarBooking[] carBookingsArray;
-    private static int idAssigned = 1;
 
     static {
         carBookingsArray = new CarBooking[0];
@@ -19,7 +19,7 @@ public class CarBookingDAO {
         return carBookingsArray;
     }
 
-    public void createBooking(Car car, User user){
+    public void createBooking(CarBooking booking){
         //Extend the array by +1 each time a new record is inserted
         CarBooking[] carBookingsArrayExtended = new CarBooking[carBookingsArray.length+1];
         for(int i = 0; i <carBookingsArray.length; i++){
@@ -29,13 +29,7 @@ public class CarBookingDAO {
         carBookingsArray = Arrays.copyOf(carBookingsArrayExtended, carBookingsArrayExtended.length);
 
         //Insert the new record in the last position
-        carBookingsArray[carBookingsArray.length-1]
-                = new CarBooking(
-                        idAssigned++,
-                        user,
-                        car,
-                        LocalDateTime.now(),
-                        BookingStatus.ACTIVE);
+        carBookingsArray[carBookingsArray.length-1] = booking;
     }
 
     public void deleteBooking(CarBooking carBooking){
@@ -60,18 +54,18 @@ public class CarBookingDAO {
         carBookingsArray = Arrays.copyOf(carBookingsArrayReduced, carBookingsArrayReduced.length);
     }
 
-    public CarBooking[] getBookingByUser(int selectedUserID){
+    public CarBooking[] getBookingByUser(UUID selectedUserID){
         CarBooking[] bookings; //Array should be initialized empty
         int recordCount = 0; //we will use this variable to count the total occurrences of the users we're searching.
         for(int i = 0; i < carBookingsArray.length; i++){
-            if(carBookingsArray[i].getUser().getId() == selectedUserID){
+            if(carBookingsArray[i].getUser().getId().equals(selectedUserID)){
                 recordCount++;
             }
         }
         bookings = new CarBooking[recordCount]; //this will help us to define the size of the array we're going to return
         int index = 0;
         for(int i = 0; i < carBookingsArray.length; i++) {
-            if(carBookingsArray[i].getUser().getId() == selectedUserID){
+            if(carBookingsArray[i].getUser().getId().equals(selectedUserID)){
                 bookings[index] = carBookingsArray[i];
                 index++;
             }

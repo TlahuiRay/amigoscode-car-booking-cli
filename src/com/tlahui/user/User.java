@@ -2,21 +2,22 @@ package com.tlahui.user;
 
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class User {
-    int id;
+    UUID id;
     String name;
 
-    public User(int id, String name) {
+    public User(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -41,7 +42,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name);
     }
 
     @Override

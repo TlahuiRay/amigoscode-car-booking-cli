@@ -1,16 +1,16 @@
 package com.tlahui.car;
 
-import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Car {
-    int id;
+    UUID id;
     String regNumber;
-    BigDecimal rentalPricePerDay;
+    double rentalPricePerDay;
     Brand brand;
     boolean isElectric;
 
-    public Car(int id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
+    public Car(UUID id, String regNumber, double rentalPricePerDay, Brand brand, boolean isElectric) {
         this.id = id;
         this.regNumber = regNumber;
         this.rentalPricePerDay = rentalPricePerDay;
@@ -18,11 +18,11 @@ public class Car {
         this.isElectric = isElectric;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -34,11 +34,11 @@ public class Car {
         this.regNumber = regNumber;
     }
 
-    public BigDecimal getRentalPricePerDay() {
+    public double getRentalPricePerDay() {
         return rentalPricePerDay;
     }
 
-    public void setRentalPricePerDay(BigDecimal rentalPricePerDay) {
+    public void setRentalPricePerDay(double rentalPricePerDay) {
         this.rentalPricePerDay = rentalPricePerDay;
     }
 
@@ -74,7 +74,7 @@ public class Car {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return id == car.id && isElectric == car.isElectric && Objects.equals(regNumber, car.regNumber) && Objects.equals(rentalPricePerDay, car.rentalPricePerDay) && brand == car.brand;
+        return Objects.equals(id, car.id) && isElectric == car.isElectric && Objects.equals(regNumber, car.regNumber) && Objects.equals(rentalPricePerDay, car.rentalPricePerDay) && brand == car.brand;
     }
 
     @Override

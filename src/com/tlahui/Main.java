@@ -1,5 +1,6 @@
 package com.tlahui;
 
+import com.tlahui.booking.BookingStatus;
 import com.tlahui.booking.CarBooking;
 import com.tlahui.booking.CarBookingService;
 import com.tlahui.car.Car;
@@ -7,9 +8,12 @@ import com.tlahui.car.CarService;
 import com.tlahui.user.User;
 import com.tlahui.user.UserService;
 
-import java.util.InputMismatchException;
-import java.util.Optional;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -65,8 +69,12 @@ public class Main {
         System.out.println("Book a Car");
         Car[] cars = carService.getAvailableCars(getAllBookedCars(carBookingService));
         Car[] bookedCars = getAllBookedCars(carBookingService);
-        int selectedCarID = -1;
-        int selectedUserID = -1;
+        String selectedCarID = "";
+        String selectedUserID = "";
+        String startDateStr = "";
+        String endDateStr = "";
+        LocalDate startDate = null, endDate = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         boolean validInput = false;
 
         if(cars.length == 0) {
@@ -79,26 +87,23 @@ public class Main {
             try {
                 for(Car car : cars)
                     System.out.println(car.toString());
-                selectedCarID = scanner.nextInt();
-                scanner.nextLine();
+                selectedCarID = scanner.nextLine();
                 validInput = true;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input.Please enter an numeric value.");
-                scanner.nextLine();
+                System.out.println("Invalid input. Please enter a valid value.");
             }
 
         }
 
         //Verify Booked Cars
         for (Car bookedCar : bookedCars) {
-            if (bookedCar.getId() == selectedCarID) {
+            if (bookedCar.getId().equals(UUID.fromString(selectedCarID))) {
                 System.out.println("You have selected a car that's already booked. Try a different car");
                 return;
             }
         }
 
-
-        Car carToBook = carService.getCarByID(selectedCarID);
+        Car carToBook = carService.getCarByID(UUID.fromString(selectedCarID));
         if(Optional.ofNullable(carToBook).isEmpty()) {
             System.out.println("Selected car is not valid");
             return;
@@ -110,42 +115,77 @@ public class Main {
             try {
                 for(User user : userService.getAllUsers())
                     System.out.println(user.toString());
-                selectedUserID = scanner.nextInt();
-                scanner.nextLine();
+                selectedUserID = scanner.nextLine();
                 validInput = true;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter an numeric value.");
-                scanner.nextLine();
+                System.out.println("Invalid input. Please enter a valid value.");
             }
         }
-        User userToBook = userService.getUserByID(selectedUserID);
+        User userToBook = userService.getUserByID(UUID.fromString(selectedUserID));
         if(Optional.ofNullable(userToBook).isEmpty()) {
             System.out.println("Selected user is not valid");
             return;
         }
 
-        carBookingService.bookACar(carToBook, userToBook);
-        System.out.println("User: " + userToBook.toString() +"\nHas successfully booked Car: " + carToBook.toString()+"\n");
+        System.out.println("Indicate booking start date (yyyy-MM-dd)");
+        while(startDate == null){
+            try{
+                startDateStr = scanner.nextLine();
+                startDate = LocalDate.parse(startDateStr, formatter);
+                if(startDate.isBefore(LocalDate.now())){
+                    System.out.println("Invalid Date, Start Date cannot be before today");
+                    startDate = null;
+                }
+
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Date, try again with a valid value (yyyy-MM-dd)");
+            }
+        }
+
+        System.out.println("Indicate booking end date (yyyy-MM-dd)");
+        while(endDate == null){
+            try{
+                endDateStr = scanner.nextLine();
+                endDate = LocalDate.parse(endDateStr, formatter);
+                if(endDate.isBefore(startDate)){
+                    System.out.println("Invalid Date, End Date cannot be Start Date");
+                    endDate = null;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid Date, try again with a valid value (yyyy-MM-dd)");
+            }
+        }
+
+        carBookingService.bookACar(
+                new CarBooking(
+                        UUID.randomUUID(),
+                        userToBook,
+                        carToBook,
+                        startDate,
+                        endDate,
+                        carToBook.getRentalPricePerDay()*startDate.until(endDate, ChronoUnit.DAYS),
+                        BookingStatus.ACTIVE));
+        System.out.println("User: " + userToBook.getName() +"\n"+
+                "Has successfully booked Car: " + carToBook.getBrand() +"\n"+
+                "with Registration Number: "+ carToBook.getRegNumber()+ "\n");
     }
     private static void viewAllUserBookedCars(CarBookingService carBookingService, UserService userService, Scanner scanner){
         boolean validInput = false;
-        int selectedUserID = -1;
+        String selectedUserID = "";
 
         System.out.println("Select the ID of an existing User");
         while (!validInput) {
             try {
                 for(User user : userService.getAllUsers())
                     System.out.println(user.toString());
-                selectedUserID = scanner.nextInt();
-                scanner.nextLine();
+                selectedUserID = scanner.nextLine();;
                 validInput = true;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter an numeric value.");
-                scanner.nextLine();
+                System.out.println("Invalid input. Please enter a valid value.");
             }
         }
 
-        CarBooking[] bookings = carBookingService.getCarBookingByUser(selectedUserID);
+        CarBooking[] bookings = carBookingService.getCarBookingByUser(UUID.fromString(selectedUserID));
         if(bookings.length == 0){
             System.out.println("Selected user doesn't have any booking");
             return;
@@ -169,7 +209,7 @@ public class Main {
 
     private static void deleteBooking(CarBookingService carBookingService, Scanner scanner){
         CarBooking[] carBookings = carBookingService.getAllBookings();
-        int selectedBooking = -1;
+        String selectedBooking = "";
         boolean validInput = false;
         if(carBookings.length == 0){
             System.out.println("Currently there's no bookings");
@@ -182,15 +222,13 @@ public class Main {
                 for(CarBooking carBooking : carBookings){
                     System.out.println(carBooking.toString());
                 }
-                selectedBooking = scanner.nextInt();
-                scanner.nextLine();
+                selectedBooking = scanner.nextLine();;
                 validInput = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an numeric value.");
-                scanner.nextLine();
             }
         }
-        CarBooking bookingToDelete = carBookingService.getCarBookingByID(selectedBooking);
+        CarBooking bookingToDelete = carBookingService.getCarBookingByID(UUID.fromString(selectedBooking));
 
         if(Optional.ofNullable(bookingToDelete).isEmpty()) {
             System.out.println("Selected booking is not valid");

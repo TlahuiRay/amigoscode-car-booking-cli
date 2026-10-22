@@ -2,30 +2,38 @@ package com.tlahui.booking;
 
 import com.tlahui.car.Car;
 import com.tlahui.user.User;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class CarBooking {
-    private int bookingId;
+    private UUID bookingId;
     private User user;
     private Car car;
-    private LocalDateTime timeStamp;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private double price;
     private BookingStatus status;
 
-    public CarBooking(int bookingId, User user, Car car, LocalDateTime timeStamp, BookingStatus status) {
+    public CarBooking(UUID bookingId, User user, Car car,
+                      LocalDate startDate, LocalDate endDate, double price, BookingStatus status) {
         this.bookingId = bookingId;
         this.user = user;
         this.car = car;
-        this.timeStamp = timeStamp;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.price = price;
         this.status = status;
     }
 
-    public int getBookingId() {
+    public UUID getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(int bookingId) {
+    public void setBookingId(UUID bookingId) {
         this.bookingId = bookingId;
     }
 
@@ -45,14 +53,6 @@ public class CarBooking {
         this.car = car;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
     public BookingStatus getStatus() {
         return status;
     }
@@ -61,17 +61,28 @@ public class CarBooking {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CarBooking that = (CarBooking) o;
-        return bookingId == that.bookingId && Objects.equals(user, that.user) && Objects.equals(car, that.car) && Objects.equals(timeStamp, that.timeStamp) && status == that.status;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(bookingId, user, car, timeStamp, status);
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     @Override
@@ -80,8 +91,28 @@ public class CarBooking {
                 "bookingId=" + bookingId +
                 ", user=" + user +
                 ", car=" + car +
-                ", timeStamp=" + timeStamp +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", price=" + price +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CarBooking that = (CarBooking) o;
+        return Double.compare(price, that.price) == 0 &&
+                Objects.equals(bookingId, that.bookingId) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(car, that.car) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate) &&
+                status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId, user, car, startDate, endDate, price, status);
     }
 }

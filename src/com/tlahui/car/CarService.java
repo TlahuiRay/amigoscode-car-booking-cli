@@ -1,5 +1,7 @@
 package com.tlahui.car;
 
+import java.util.UUID;
+
 public class CarService {
 
     CarDAO carDAO = new CarDAO();
@@ -64,9 +66,9 @@ public class CarService {
         return electricCars;
     }
 
-    public Car getCarByID(int id){
+    public Car getCarByID(UUID id){
         for(Car car : carDAO.getAllCars()){
-            if(car.getId() == id)
+            if(car.getId().equals(id))
                 return car;
         }
         return null;

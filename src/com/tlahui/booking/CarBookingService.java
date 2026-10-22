@@ -3,6 +3,8 @@ package com.tlahui.booking;
 import com.tlahui.car.Car;
 import com.tlahui.user.User;
 
+import java.util.UUID;
+
 public class CarBookingService {
 
     CarBookingDAO carBookingDAO = new CarBookingDAO();
@@ -11,13 +13,13 @@ public class CarBookingService {
         return carBookingDAO.getCarBookings();
     }
 
-    public void bookACar(Car car, User user){
-        carBookingDAO.createBooking(car, user);
+    public void bookACar(CarBooking booking){
+        carBookingDAO.createBooking(booking);
     }
 
-    public CarBooking getCarBookingByID(int id){
+    public CarBooking getCarBookingByID(UUID id){
         for (CarBooking carBooking : carBookingDAO.getCarBookings()){
-            if(carBooking.getBookingId() == id)
+            if(carBooking.getBookingId().equals(id))
                 return carBooking;
         }
         return null;
@@ -27,7 +29,7 @@ public class CarBookingService {
         carBookingDAO.deleteBooking(carBooking);
     }
 
-    public CarBooking[] getCarBookingByUser(int selectedUserID) {
+    public CarBooking[] getCarBookingByUser(UUID selectedUserID) {
         return carBookingDAO.getBookingByUser(selectedUserID);
     }
 
