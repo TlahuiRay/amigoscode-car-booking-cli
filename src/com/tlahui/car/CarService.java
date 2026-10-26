@@ -4,14 +4,14 @@ import java.util.UUID;
 
 public class CarService {
 
-    CarDAO carDAO = new CarDAO();
+    CarArrayDataAccessService carDAO = new CarArrayDataAccessService();
 
     public Car[] getAvailableCars(Car[] bookedCars){
 
         int availableCarsCount = 0;
         boolean booked;
         //First you need to get the total count of available cars, compare all cars vs booked cars
-        for (Car car : carDAO.getAllCars()) {
+        for (Car car : carDAO.getCars()) {
             booked = false;
             for (Car bookedCar : bookedCars) {
                 if (!bookedCar.equals(car)) {
@@ -29,7 +29,7 @@ public class CarService {
         int index = 0;
 
         //Create an array containing all the available cars
-        for (Car car : carDAO.getAllCars()) {
+        for (Car car : carDAO.getCars()) {
             booked = false;
             for (Car bookedCar : bookedCars) {
                 if (!bookedCar.equals(car)) {
@@ -67,7 +67,7 @@ public class CarService {
     }
 
     public Car getCarByID(UUID id){
-        for(Car car : carDAO.getAllCars()){
+        for(Car car : carDAO.getCars()){
             if(car.getId().equals(id))
                 return car;
         }
