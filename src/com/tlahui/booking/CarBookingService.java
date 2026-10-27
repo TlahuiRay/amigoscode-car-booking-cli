@@ -7,7 +7,11 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    CarBookingDAO carBookingDAO = new CarBookingDAO();
+    private CarBookingDAO carBookingDAO;
+
+    public CarBookingService(CarBookingDAO carBookingDAO) {
+        this.carBookingDAO = carBookingDAO;
+    }
 
     public CarBooking[] getAllBookings(){
         return carBookingDAO.getCarBookings();

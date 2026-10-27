@@ -4,7 +4,11 @@ import java.util.UUID;
 
 public class CarService {
 
-    CarArrayDataAccessService carDAO = new CarArrayDataAccessService();
+    private ICarDAO carDAO;
+
+    public CarService(ICarDAO carDAO) {
+        this.carDAO = carDAO;
+    }
 
     public Car[] getAvailableCars(Car[] bookedCars){
 

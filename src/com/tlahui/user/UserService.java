@@ -3,7 +3,12 @@ package com.tlahui.user;
 import java.util.UUID;
 
 public class UserService {
-    UserArrayDataAccessService userDAO = new UserArrayDataAccessService();
+    private IUserDAO userDAO;
+
+    public UserService(IUserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     public User[] getAllUsers(){
         return userDAO.getUsers();
     }

@@ -2,10 +2,15 @@ package com.tlahui;
 
 import com.tlahui.booking.BookingStatus;
 import com.tlahui.booking.CarBooking;
+import com.tlahui.booking.CarBookingDAO;
 import com.tlahui.booking.CarBookingService;
 import com.tlahui.car.Car;
+import com.tlahui.car.CarArrayDataAccessService;
 import com.tlahui.car.CarService;
+import com.tlahui.car.ICarDAO;
+import com.tlahui.user.IUserDAO;
 import com.tlahui.user.User;
+import com.tlahui.user.UserArrayDataAccessService;
 import com.tlahui.user.UserService;
 
 import java.time.LocalDate;
@@ -22,9 +27,13 @@ public class Main {
         boolean keepGoing = true;
         Scanner scanner = new Scanner(System.in);
 
-        CarService carService = new CarService();
-        CarBookingService carBookingService = new CarBookingService();
-        UserService userService = new UserService();
+        CarBookingDAO carBookingDAO = new CarBookingDAO();
+        ICarDAO carDAO = new CarArrayDataAccessService();
+        IUserDAO userDAO = new UserArrayDataAccessService();
+
+        CarService carService = new CarService(carDAO);
+        CarBookingService carBookingService = new CarBookingService(carBookingDAO);
+        UserService userService = new UserService(userDAO);
 
 
         System.out.println("Car Booking CLI powered by Tlahui");
