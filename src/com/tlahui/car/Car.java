@@ -1,9 +1,10 @@
 package com.tlahui.car;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Car {
+public class Car implements Serializable {
     UUID id;
     String regNumber;
     double rentalPricePerDay;
