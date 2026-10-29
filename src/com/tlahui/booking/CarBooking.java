@@ -3,13 +3,14 @@ package com.tlahui.booking;
 import com.tlahui.car.Car;
 import com.tlahui.user.User;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 
-public class CarBooking {
+public class CarBooking implements Serializable {
     private UUID bookingId;
     private User user;
     private Car car;

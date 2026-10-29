@@ -2,7 +2,7 @@ package com.tlahui;
 
 import com.tlahui.booking.BookingStatus;
 import com.tlahui.booking.CarBooking;
-import com.tlahui.booking.CarBookingDAO;
+import com.tlahui.booking.CarBookingArrayDataAccessService;
 import com.tlahui.booking.CarBookingService;
 import com.tlahui.car.Car;
 import com.tlahui.car.CarArrayDataAccessService;
@@ -27,12 +27,12 @@ public class Main {
         boolean keepGoing = true;
         Scanner scanner = new Scanner(System.in);
 
-        CarBookingDAO carBookingDAO = new CarBookingDAO();
+        CarBookingArrayDataAccessService carBookingArrayDataAccessService = new CarBookingArrayDataAccessService();
         ICarDAO carDAO = new CarArrayDataAccessService();
         IUserDAO userDAO = new UserArrayDataAccessService();
 
         CarService carService = new CarService(carDAO);
-        CarBookingService carBookingService = new CarBookingService(carBookingDAO);
+        CarBookingService carBookingService = new CarBookingService(carBookingArrayDataAccessService);
         UserService userService = new UserService(userDAO);
 
 

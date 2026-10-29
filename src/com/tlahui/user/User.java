@@ -1,10 +1,11 @@
 package com.tlahui.user;
 
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     UUID id;
     String name;
 
