@@ -1,7 +1,5 @@
 package com.tlahui.car;
 
-import com.tlahui.user.User;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +12,8 @@ public class CarArrayDataAccessService implements ICarDAO {
         try {
             //Indications mentioned the following path "src/com/amigoscode/users.csv"
             // however I had already named my project "tlahui", change if necessary
-            String filePath = "src\\com\\tlahui\\cars.csv";
-            String[] lines = Files.readAllLines(Path.of(filePath))
+            Path filePath = Path.of("src","com","tlahui","cars.csv");
+            String[] lines = Files.readAllLines(filePath)
                     .toArray(new String[0]);
             carsSeedDataArray = new Car[lines.length];
             // Parse each line and create a User object.
@@ -37,9 +35,8 @@ public class CarArrayDataAccessService implements ICarDAO {
 
                 carsSeedDataArray[i] = new Car(id, regNumber, price, brand, isElectric);
             }
-
         } catch (IOException e) {
-            System.out.println(e.getMessage());;
+            throw new RuntimeException("Error reading cars file", e);
         }
     }
 

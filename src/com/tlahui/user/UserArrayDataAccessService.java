@@ -8,16 +8,12 @@ import java.util.UUID;
 public class UserArrayDataAccessService implements IUserDAO {
     private static User[] usersSeedDataArray = null;
 
-
-
-
-
     static {
         try {
             //Indications mentioned the following path "src/com/amigoscode/users.csv"
             // however I had already named my project "tlahui", change if necessary
-            String filePath = "src\\com\\tlahui\\users.csv";
-            String[] lines = Files.readAllLines(Path.of(filePath))
+            Path filePath = Path.of("src","com","tlahui","users.csv");
+            String[] lines = Files.readAllLines(filePath)
                     .toArray(new String[0]);
             usersSeedDataArray = new User[lines.length];
             // Parse each line and create a User object.
@@ -29,9 +25,8 @@ public class UserArrayDataAccessService implements IUserDAO {
 
                 usersSeedDataArray[i] = new User(id, name);
             }
-
         } catch (IOException e) {
-            System.out.println(e.getMessage());;
+            throw new RuntimeException("Error reading users file", e);
         }
     }
 

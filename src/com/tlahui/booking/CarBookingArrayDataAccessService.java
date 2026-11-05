@@ -3,17 +3,16 @@ package com.tlahui.booking;
 import com.tlahui.car.Car;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.UUID;
 
-public class CarBookingArrayDataAccessService implements ICarBookingService {
+public class CarBookingArrayDataAccessService implements ICarBookingDAO {
     private static CarBooking[] carBookingsArray;
-    private static final Path FILE_PATH = Path.of("src\\com\\tlahui\\bookings.ser");
+    private static final Path FILE_PATH = Path.of("src","com","tlahui","bookings.ser");
+    private CarBookingFileDataAccessService bookingFileDAS = new CarBookingFileDataAccessService();
 
     static {
         //We initialize the bookings array from the file
@@ -70,7 +69,7 @@ public class CarBookingArrayDataAccessService implements ICarBookingService {
 
         //Save current state in the file after inserting a new record in the array
         try {
-            writeToFile();
+            bookingFileDAS.writeToFile(carBookingsArray);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +99,7 @@ public class CarBookingArrayDataAccessService implements ICarBookingService {
 
         //Save current state in the file after deleting a record in the array
         try {
-            writeToFile();
+            bookingFileDAS.writeToFile(carBookingsArray);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -135,22 +134,5 @@ public class CarBookingArrayDataAccessService implements ICarBookingService {
         }
         return bookedCars;
 
-    }
-
-    //Save current state to the file
-    private static void writeToFile() throws IOException {
-        if (Files.notExists(FILE_PATH)) {
-            Files.createFile(FILE_PATH);
-        }
-        Files.write(FILE_PATH, new byte[0], StandardOpenOption.TRUNCATE_EXISTING);
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                Files.newOutputStream(FILE_PATH, StandardOpenOption.WRITE))) {
-            for (int i = 0; i < carBookingsArray.length; i++) {
-                if (carBookingsArray[i] != null) {
-                    out.writeObject(carBookingsArray[i]);
-                }
-            }
-            out.flush();
-        }
     }
 }

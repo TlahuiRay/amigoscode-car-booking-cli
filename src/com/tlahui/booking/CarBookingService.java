@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    private ICarBookingService carBookingService;
+    private ICarBookingDAO carBookingService;
 
-    public CarBookingService(ICarBookingService carBookingService) {
+    public CarBookingService(ICarBookingDAO carBookingService) {
         this.carBookingService = carBookingService;
     }
 

@@ -4,7 +4,7 @@ import com.tlahui.car.Car;
 
 import java.util.UUID;
 
-public interface ICarBookingService {
+public interface ICarBookingDAO {
     CarBooking[] getCarBookings();
     void createBooking(CarBooking booking);
     void deleteBooking(CarBooking carBooking);
