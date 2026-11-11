@@ -7,7 +7,7 @@ import java.util.UUID;
 public interface ICarBookingDAO {
     CarBooking[] getCarBookings();
     void createBooking(CarBooking booking);
-    void deleteBooking(CarBooking carBooking);
+    boolean deleteBooking(CarBooking carBooking);
     CarBooking[] getBookingByUser(UUID selectedUserID);
     Car[] getAllBookedCars();
 

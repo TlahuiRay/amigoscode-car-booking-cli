@@ -1,3 +1,6 @@
+/*
+ * DEPRECATED
+ * */
 package com.tlahui.user;
 
 import java.io.IOException;

@@ -1,3 +1,7 @@
+/*
+* DEPRECATED
+* */
+
 package com.tlahui.booking;
 
 import com.tlahui.car.Car;
@@ -69,14 +73,14 @@ public class CarBookingArrayDataAccessService implements ICarBookingDAO {
 
         //Save current state in the file after inserting a new record in the array
         try {
-            bookingFileDAS.writeToFile(carBookingsArray);
+            writeToFile(carBookingsArray);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public void deleteBooking(CarBooking carBooking){
+    public boolean deleteBooking(CarBooking carBooking){
         //Delete the booking by making the existing record equal to null
         for(int i = 0; i < carBookingsArray.length; i++){
             if(carBookingsArray[i].equals(carBooking)){
@@ -99,12 +103,11 @@ public class CarBookingArrayDataAccessService implements ICarBookingDAO {
 
         //Save current state in the file after deleting a record in the array
         try {
-            bookingFileDAS.writeToFile(carBookingsArray);
+            writeToFile(carBookingsArray);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
+        return true;
     }
 
     public CarBooking[] getBookingByUser(UUID selectedUserID){
@@ -133,6 +136,21 @@ public class CarBookingArrayDataAccessService implements ICarBookingDAO {
             bookedCars[i] = carBookingsArray[i].getCar();
         }
         return bookedCars;
+    }
 
+    public static void writeToFile(CarBooking[] carBookingsArray) throws IOException {
+        if (Files.notExists(FILE_PATH)) {
+            Files.createFile(FILE_PATH);
+        }
+        Files.write(FILE_PATH, new byte[0], StandardOpenOption.TRUNCATE_EXISTING);
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                Files.newOutputStream(FILE_PATH, StandardOpenOption.WRITE))) {
+            for (int i = 0; i < carBookingsArray.length; i++) {
+                if (carBookingsArray[i] != null) {
+                    out.writeObject(carBookingsArray[i]);
+                }
+            }
+            out.flush();
+        }
     }
 }
