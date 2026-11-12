@@ -23,10 +23,10 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
             return bookings;
         } catch (FileNotFoundException e) {
             System.out.println("Bookings file was not found");
+            return new CarBooking[0];
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error reading bookings file");
+            throw new RuntimeException("Error reading file", e);
         }
-        return new CarBooking[0];
     }
 
     @Override
