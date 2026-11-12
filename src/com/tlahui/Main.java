@@ -1,11 +1,19 @@
 package com.tlahui;
 
-import com.tlahui.booking.BookingStatus;
 import com.tlahui.booking.CarBooking;
+import com.tlahui.booking.ICarBookingDAO;
 import com.tlahui.booking.CarBookingService;
+import com.tlahui.booking.CarBookingFileDataAccessService;
+import com.tlahui.booking.BookingStatus;
+
 import com.tlahui.car.Car;
+import com.tlahui.car.CarFileDataAccessService;
 import com.tlahui.car.CarService;
+import com.tlahui.car.ICarDAO;
+
 import com.tlahui.user.User;
+import com.tlahui.user.IUserDAO;
+import com.tlahui.user.UserFileDataAccessService;
 import com.tlahui.user.UserService;
 
 import java.time.LocalDate;
@@ -22,9 +30,13 @@ public class Main {
         boolean keepGoing = true;
         Scanner scanner = new Scanner(System.in);
 
-        CarService carService = new CarService();
-        CarBookingService carBookingService = new CarBookingService();
-        UserService userService = new UserService();
+        ICarBookingDAO bookingDAO = new CarBookingFileDataAccessService();
+        ICarDAO carDAO = new CarFileDataAccessService();
+        IUserDAO userDAO = new UserFileDataAccessService();
+
+        CarService carService = new CarService(carDAO);
+        CarBookingService carBookingService = new CarBookingService(bookingDAO);
+        UserService userService = new UserService(userDAO);
 
 
         System.out.println("Car Booking CLI powered by Tlahui");
@@ -211,6 +223,7 @@ public class Main {
         CarBooking[] carBookings = carBookingService.getAllBookings();
         String selectedBooking = "";
         boolean validInput = false;
+
         if(carBookings.length == 0){
             System.out.println("Currently there's no bookings");
             return;
