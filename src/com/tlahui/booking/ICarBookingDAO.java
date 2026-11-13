@@ -2,6 +2,7 @@ package com.tlahui.booking;
 
 import com.tlahui.car.Car;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ICarBookingDAO {
@@ -9,6 +10,6 @@ public interface ICarBookingDAO {
     void createBooking(CarBooking booking);
     boolean deleteBooking(CarBooking carBooking);
     CarBooking[] getBookingByUser(UUID selectedUserID);
-    Car[] getAllBookedCars();
+    List<Car> getAllBookedCars();
 
 }

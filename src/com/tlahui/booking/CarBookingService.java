@@ -2,6 +2,7 @@ package com.tlahui.booking;
 
 import com.tlahui.car.Car;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
@@ -36,7 +37,7 @@ public class CarBookingService {
         return carBookingService.getBookingByUser(selectedUserID);
     }
 
-    public Car[] getAllBookedCars() {
+    public List<Car> getAllBookedCars() {
         return carBookingService.getAllBookedCars();
     }
 }

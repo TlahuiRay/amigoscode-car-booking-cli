@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserFileDataAccessService implements IUserDAO{
@@ -11,6 +13,7 @@ public class UserFileDataAccessService implements IUserDAO{
 
     @Override
     public User[] getUsers() {
+        List<User> usersSeedData = new ArrayList<>();
         try {
             //Indications mentioned the following path "src/com/amigoscode/users.csv"
             // however I had already named my project "tlahui", change if necessary

@@ -1,5 +1,7 @@
 package com.tlahui.car;
 
+import java.util.List;
+
 public interface ICarDAO {
-    Car[] getCars();
+    List<Car> getCars();
 }

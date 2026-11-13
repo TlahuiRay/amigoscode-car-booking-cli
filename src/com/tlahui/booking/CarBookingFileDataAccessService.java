@@ -4,6 +4,8 @@ import com.tlahui.car.Car;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,11 +93,12 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
     }
 
     @Override
-    public Car[] getAllBookedCars() {
+    public List<Car> getAllBookedCars() {
         CarBooking[] allBookings = getCarBookings();
-        Car[] bookedCars = new Car[allBookings.length];
+        List<Car> bookedCars = new ArrayList<>();
+
         for(int i = 0; i < allBookings.length; i++){
-            bookedCars[i] = allBookings[i].getCar();
+            bookedCars.add(allBookings[i].getCar());
         }
         return bookedCars;
     }
