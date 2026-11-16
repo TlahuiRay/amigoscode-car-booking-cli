@@ -1,5 +1,7 @@
 package com.tlahui.user;
 
+import java.util.List;
+
 public interface IUserDAO {
-    User[] getUsers();
+    List<User> getUsers();
 }

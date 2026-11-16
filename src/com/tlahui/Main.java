@@ -199,8 +199,8 @@ public class Main {
             }
         }
 
-        CarBooking[] bookings = carBookingService.getCarBookingByUser(UUID.fromString(selectedUserID));
-        if(bookings.length == 0){
+        List<CarBooking>  bookings = carBookingService.getCarBookingByUser(UUID.fromString(selectedUserID));
+        if(bookings.isEmpty()){
             System.out.println("Selected user doesn't have any booking");
             return;
         }
@@ -211,8 +211,8 @@ public class Main {
     }
 
     private static void viewAllBookings(CarBookingService carBookingService){
-        CarBooking[] carBookings = carBookingService.getAllBookings();
-        if(carBookings.length == 0){
+        List<CarBooking> carBookings = carBookingService.getAllBookings();
+        if(carBookings.isEmpty()){
             System.out.println("Currently there's no bookings");
             return;
         }
@@ -222,11 +222,11 @@ public class Main {
     }
 
     private static void deleteBooking(CarBookingService carBookingService, Scanner scanner){
-        CarBooking[] carBookings = carBookingService.getAllBookings();
+        List<CarBooking> carBookings = carBookingService.getAllBookings();
         String selectedBooking = "";
         boolean validInput = false;
 
-        if(carBookings.length == 0){
+        if(carBookings.isEmpty()){
             System.out.println("Currently there's no bookings");
             return;
         }

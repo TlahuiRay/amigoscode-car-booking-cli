@@ -6,26 +6,24 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class CarBookingFileDataAccessService implements ICarBookingDAO {
     private static final Path FILE_PATH = Path.of("src","com","tlahui","bookings.ser");
 
     @Override
-    public CarBooking[] getCarBookings() {
+    public List<CarBooking>  getCarBookings() {
+        List<CarBooking> bookings = new ArrayList<>();
+
         try(FileInputStream fileInputStream = new FileInputStream(FILE_PATH.toFile());
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            int length = objectInputStream.readInt();
-            CarBooking[] bookings = new CarBooking[length];
-            int index = 0;
             for (CarBooking booking : bookings) {
-                bookings[index++] =(CarBooking) objectInputStream.readObject();
+                bookings.add((CarBooking) objectInputStream.readObject());
             }
             return bookings;
         } catch (FileNotFoundException e) {
             System.out.println("Bookings file was not found");
-            return new CarBooking[0];
+            return bookings;
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Error reading file", e);
         }
@@ -33,11 +31,11 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
 
     @Override
     public void createBooking(CarBooking booking) {
-        CarBooking[] bookings = getCarBookings();
+        List<CarBooking> bookings = getCarBookings();
 
         try(FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH.toFile());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeInt((bookings.length + 1));
+            objectOutputStream.writeInt((bookings.size() + 1));
             for (CarBooking carBooking : bookings) {
                 objectOutputStream.writeObject(carBooking);
             }
@@ -50,12 +48,12 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
 
     @Override
     public boolean deleteBooking(CarBooking carBooking) {
-        CarBooking[] bookings = getCarBookings();
+        List<CarBooking> bookings = getCarBookings();
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH.toFile());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
 
-            objectOutputStream.writeInt((bookings.length - 1));
+            objectOutputStream.writeInt((bookings.size() - 1));
 
             for (CarBooking booking : bookings) {
                 if (booking != null && booking.equals(carBooking)) {
@@ -71,22 +69,14 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
     }
 
     @Override
-    public CarBooking[] getBookingByUser(UUID selectedUserID) {
-        CarBooking[] allBookings = getCarBookings();
-        CarBooking[] bookings; //Array should be initialized empty
+    public List<CarBooking>  getBookingByUser(UUID selectedUserID) {
+        List<CarBooking> allBookings = getCarBookings();
+        List<CarBooking> bookings = new ArrayList<>();
 
-        int recordCount = 0; //we will use this variable to count the total occurrences of the users we're searching.
-        for(int i = 0; i < allBookings.length; i++){
-            if(allBookings[i].getUser().getId().equals(selectedUserID)){
-                recordCount++;
-            }
-        }
-        bookings = new CarBooking[recordCount]; //this will help us to define the size of the array we're going to return
-        int index = 0;
-        for(int i = 0; i < allBookings.length; i++) {
-            if(allBookings[i].getUser().getId().equals(selectedUserID)){
-                bookings[index] = allBookings[i];
-                index++;
+
+        for(int i = 0; i < allBookings.size(); i++) {
+            if(allBookings.get(i).getUser().getId().equals(selectedUserID)){
+                bookings.add(allBookings.get(i));
             }
         }
         return bookings;
@@ -94,11 +84,11 @@ public class CarBookingFileDataAccessService implements ICarBookingDAO {
 
     @Override
     public List<Car> getAllBookedCars() {
-        CarBooking[] allBookings = getCarBookings();
+        List<CarBooking>allBookings = getCarBookings();
         List<Car> bookedCars = new ArrayList<>();
 
-        for(int i = 0; i < allBookings.length; i++){
-            bookedCars.add(allBookings[i].getCar());
+        for(int i = 0; i < allBookings.size(); i++){
+            bookedCars.add(allBookings.get(i).getCar());
         }
         return bookedCars;
     }

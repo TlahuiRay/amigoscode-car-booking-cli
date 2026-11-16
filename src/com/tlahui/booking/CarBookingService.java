@@ -13,7 +13,7 @@ public class CarBookingService {
         this.carBookingService = carBookingService;
     }
 
-    public CarBooking[] getAllBookings(){
+    public List<CarBooking>  getAllBookings(){
         return carBookingService.getCarBookings();
     }
 
@@ -33,7 +33,7 @@ public class CarBookingService {
         carBookingService.deleteBooking(carBooking);
     }
 
-    public CarBooking[] getCarBookingByUser(UUID selectedUserID) {
+    public List<CarBooking>  getCarBookingByUser(UUID selectedUserID) {
         return carBookingService.getBookingByUser(selectedUserID);
     }
 
