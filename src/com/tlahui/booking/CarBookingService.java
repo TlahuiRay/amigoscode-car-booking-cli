@@ -1,24 +1,28 @@
 package com.tlahui.booking;
 
 import com.tlahui.car.Car;
-import com.tlahui.user.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
 
-    CarBookingDAO carBookingDAO = new CarBookingDAO();
+    private ICarBookingDAO carBookingService;
 
-    public CarBooking[] getAllBookings(){
-        return carBookingDAO.getCarBookings();
+    public CarBookingService(ICarBookingDAO carBookingService) {
+        this.carBookingService = carBookingService;
+    }
+
+    public List<CarBooking>  getAllBookings(){
+        return carBookingService.getCarBookings();
     }
 
     public void bookACar(CarBooking booking){
-        carBookingDAO.createBooking(booking);
+        carBookingService.createBooking(booking);
     }
 
     public CarBooking getCarBookingByID(UUID id){
-        for (CarBooking carBooking : carBookingDAO.getCarBookings()){
+        for (CarBooking carBooking : carBookingService.getCarBookings()){
             if(carBooking.getBookingId().equals(id))
                 return carBooking;
         }
@@ -26,14 +30,14 @@ public class CarBookingService {
     }
 
     public void deleteBooking(CarBooking carBooking){
-        carBookingDAO.deleteBooking(carBooking);
+        carBookingService.deleteBooking(carBooking);
     }
 
-    public CarBooking[] getCarBookingByUser(UUID selectedUserID) {
-        return carBookingDAO.getBookingByUser(selectedUserID);
+    public List<CarBooking>  getCarBookingByUser(UUID selectedUserID) {
+        return carBookingService.getBookingByUser(selectedUserID);
     }
 
-    public Car[] getAllBookedCars() {
-        return carBookingDAO.getAllBookedCars();
+    public List<Car> getAllBookedCars() {
+        return carBookingService.getAllBookedCars();
     }
 }

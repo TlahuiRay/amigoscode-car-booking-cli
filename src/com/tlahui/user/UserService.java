@@ -1,10 +1,16 @@
 package com.tlahui.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-    UserDAO userDAO = new UserDAO();
-    public User[] getAllUsers(){
+    private IUserDAO userDAO;
+
+    public UserService(IUserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
+    public List<User> getAllUsers(){
         return userDAO.getUsers();
     }
 
