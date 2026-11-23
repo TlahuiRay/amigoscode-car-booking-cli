@@ -34,6 +34,6 @@ public class UserFileDataAccessService implements IUserDAO{
         } catch (IOException e) {
             System.err.println("Error reading users from file.");
         }
-        return userSeedData;
+        throw new RuntimeException("There was an Exception while trying to read from file.");
     }
 }

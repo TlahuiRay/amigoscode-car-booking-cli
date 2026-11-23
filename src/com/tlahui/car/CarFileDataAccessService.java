@@ -10,9 +10,6 @@ import java.util.UUID;
 
 public class CarFileDataAccessService implements ICarDAO{
 
-
-
-
     @Override
     public List<Car> getCars() {
         List<Car> carsSeedData = new ArrayList<>();
@@ -46,6 +43,6 @@ public class CarFileDataAccessService implements ICarDAO{
         } catch (IOException e) {
             System.err.println("Error reading users from file.");
     }
-        return carsSeedData;
+        throw new RuntimeException("There was an Exception while trying to read from file.");
     }
 }
