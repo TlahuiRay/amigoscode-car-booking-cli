@@ -1,9 +1,11 @@
 
 package com.tlahui.car;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -11,14 +13,14 @@ import java.util.UUID;
 public class CarArrayDataAccessService implements ICarDAO {
     private static Car[] carsSeedDataArray;
 
-    static {
+    @Override
+    public List<Car> getCars() {
+        List<Car> carsSeedData = new ArrayList<>();
         try {
-            //Indications mentioned the following path "src/com/amigoscode/users.csv"
-            // however I had already named my project "tlahui", change if necessary
             Path filePath = Path.of("src","com","tlahui","cars.csv");
+
             String[] lines = Files.readAllLines(filePath)
                     .toArray(new String[0]);
-            carsSeedDataArray = new Car[lines.length];
             // Parse each line and create a User object.
             for (int i = 0; i < lines.length; i++) {
                 String[] values = lines[i].split(",", 5);
@@ -36,15 +38,16 @@ public class CarArrayDataAccessService implements ICarDAO {
                 };
                 boolean isElectric = Boolean.parseBoolean(values[4].trim());
 
-                carsSeedDataArray[i] = new Car(id, regNumber, price, brand, isElectric);
+                carsSeedData.add(new Car(id, regNumber, price, brand, isElectric));
             }
+            return carsSeedData;
+        } catch ( FileNotFoundException e){
+            System.err.println("File doesn't exist yet.");
         } catch (IOException e) {
-            throw new RuntimeException("Error reading cars file", e);
+            System.err.println("Error reading users from file.");
         }
+        throw new RuntimeException("There was an Exception while trying to read from file.");
     }
 
 
-    public List<Car> getCars() {
-        return Arrays.asList(carsSeedDataArray);
-    }
 }
