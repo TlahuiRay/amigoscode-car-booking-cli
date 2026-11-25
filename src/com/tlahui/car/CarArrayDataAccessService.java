@@ -1,53 +1,25 @@
 
 package com.tlahui.car;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class CarArrayDataAccessService implements ICarDAO {
-    private static Car[] carsSeedDataArray;
+
+    private static  List<Car> cars = new ArrayList<>();
+
+    static {
+        cars.add(new Car(UUID.fromString("5a6ba841-2b8b-473c-b862-5e7264bee505"),"9H19CY90AN", 100000.00, Brand.CHEVROLET, false));
+        cars.add(new Car(UUID.fromString("66693ecb-fb5d-41da-b36b-0f3c025d219e"),"VMUSJSQBES", 50000.00, Brand.FORD, false));
+        cars.add(new Car(UUID.fromString("3a7cabad-f6e2-48af-b468-0391ec172822"),"PXW7E38KO2", 150000.00, Brand.BYD, true));
+        cars.add(new Car(UUID.fromString("8e6101f9-bebc-44fe-acbb-63d6085f8587"),"RV6KV1NM5L", 80000.00, Brand.VOLKSWAGEN, false));
+        cars.add(new Car(UUID.fromString("97319d39-1930-4404-9f45-583b58800278"),"PCX1E4MLAZ", 200000.00, Brand.TOYOTA, true));
+    }
 
     @Override
     public List<Car> getCars() {
-        List<Car> carsSeedData = new ArrayList<>();
-        try {
-            Path filePath = Path.of("src","com","tlahui","cars.csv");
-
-            String[] lines = Files.readAllLines(filePath)
-                    .toArray(new String[0]);
-            // Parse each line and create a User object.
-            for (int i = 0; i < lines.length; i++) {
-                String[] values = lines[i].split(",", 5);
-
-                UUID id = UUID.fromString(values[0].trim());
-                String regNumber = values[1].trim();
-                double price = Double.parseDouble(values[2].trim());
-                Brand brand = switch (values[3].trim()) {
-                    case "FORD" -> Brand.FORD;
-                    case "CHEVROLET" -> Brand.CHEVROLET;
-                    case "VOLKSWAGEN" -> Brand.VOLKSWAGEN;
-                    case "TOYOTA" -> Brand.TOYOTA;
-                    case "BYD" -> Brand.BYD;
-                    default -> Brand.UNKNOWN;
-                };
-                boolean isElectric = Boolean.parseBoolean(values[4].trim());
-
-                carsSeedData.add(new Car(id, regNumber, price, brand, isElectric));
-            }
-            return carsSeedData;
-        } catch ( FileNotFoundException e){
-            System.err.println("File doesn't exist yet.");
-        } catch (IOException e) {
-            System.err.println("Error reading users from file.");
-        }
-        throw new RuntimeException("There was an Exception while trying to read from file.");
+        return cars;
     }
-
-
 }

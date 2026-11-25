@@ -1,43 +1,27 @@
 
 package com.tlahui.user;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class UserArrayDataAccessService implements IUserDAO {
-    private static User[] usersSeedDataArray = null;
+
+    private static List<User> users = new ArrayList<>();
+
+    static {
+        users.add(new User(UUID.fromString("783ffe6c-82a9-47f5-a153-c24b902258d9"), "User-1"));
+        users.add(new User(UUID.fromString("a7acec56-3629-4a7e-9229-d69162ba1d63"), "User-2"));
+        users.add(new User(UUID.fromString("d6720c5c-3753-4882-84cf-a4c71a1ff068"), "User-3"));
+        users.add(new User(UUID.fromString("8f9bb8a7-8524-416e-a065-3e0a2a8793ee"), "User-4"));
+        users.add(new User(UUID.fromString("416b4350-ec0c-428b-8f85-b56c60ea5e88"), "User-5"));
+        users.add(new User(UUID.fromString("4811910c-b3ad-488f-b862-220d97897880"), "User-6"));
+        users.add(new User(UUID.fromString("ea0803bc-6320-4344-be30-498759dea37b"), "User-7"));
+        users.add(new User(UUID.fromString("3843e83c-31eb-41de-b349-616d3ace4bb6"), "User-8"));
+    }
 
     @Override
     public List<User> getUsers() {
-        List<User> userSeedData = new ArrayList<>();
-
-        try {
-            Path filePath = Path.of("src","com","tlahui","users.csv");
-            String[] lines = Files.readAllLines(filePath)
-                    .toArray(new String[0]);
-
-            // Parse each line and create a User object.
-            for (int i = 0; i < lines.length; i++) {
-                String[] values = lines[i].split(",", 2);
-
-                UUID id = UUID.fromString(values[0].trim());
-                String name = values[1].trim();
-
-                userSeedData.add(new User(id, name));
-            }
-            return userSeedData;
-        } catch ( FileNotFoundException e){
-            System.err.println("File doesn't exist yet.");
-        } catch (IOException e) {
-            System.err.println("Error reading users from file.");
-        }
-        throw new RuntimeException("There was an Exception while trying to read from file.");
+        return users;
     }
-
 }
