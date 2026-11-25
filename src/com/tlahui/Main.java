@@ -1,11 +1,19 @@
 package com.tlahui;
 
-import com.tlahui.booking.BookingStatus;
 import com.tlahui.booking.CarBooking;
+import com.tlahui.booking.ICarBookingDAO;
 import com.tlahui.booking.CarBookingService;
+import com.tlahui.booking.CarBookingFileDataAccessService;
+import com.tlahui.booking.BookingStatus;
+
 import com.tlahui.car.Car;
+import com.tlahui.car.CarFileDataAccessService;
 import com.tlahui.car.CarService;
+import com.tlahui.car.ICarDAO;
+
 import com.tlahui.user.User;
+import com.tlahui.user.IUserDAO;
+import com.tlahui.user.UserFileDataAccessService;
 import com.tlahui.user.UserService;
 
 import java.time.LocalDate;
@@ -16,15 +24,20 @@ import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         boolean keepGoing = true;
         Scanner scanner = new Scanner(System.in);
 
-        CarService carService = new CarService();
-        CarBookingService carBookingService = new CarBookingService();
-        UserService userService = new UserService();
+        ICarBookingDAO bookingDAO = new CarBookingFileDataAccessService();
+        ICarDAO carDAO = new CarFileDataAccessService();
+        IUserDAO userDAO = new UserFileDataAccessService();
+
+        CarService carService = new CarService(carDAO);
+        CarBookingService carBookingService = new CarBookingService(bookingDAO);
+        UserService userService = new UserService(userDAO);
 
 
         System.out.println("Car Booking CLI powered by Tlahui");
@@ -69,15 +82,16 @@ public class Main {
     private static void bookCar(CarBookingService carBookingService,CarService carService, UserService userService,
                                 Scanner scanner ){
         System.out.println("Book a Car");
-        Car[] cars = carService.getAvailableCars(getAllBookedCars(carBookingService));
-        Car[] bookedCars = getAllBookedCars(carBookingService);
+        List<Car> cars = carService.getAvailableCars(getAllBookedCars(carBookingService));
+        List<Car> bookedCars = getAllBookedCars(carBookingService);
+
         String selectedCarID = "", selectedUserID = "";
         String startDateStr = "", endDateStr = "";;
         LocalDate startDate = null, endDate = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
         boolean validInput = false;
 
-        if(cars.length == 0) {
+        if(cars.isEmpty()) {
             System.out.println("Currently there's no Cars Available");
             return;
         }
@@ -185,8 +199,8 @@ public class Main {
             }
         }
 
-        CarBooking[] bookings = carBookingService.getCarBookingByUser(UUID.fromString(selectedUserID));
-        if(bookings.length == 0){
+        List<CarBooking>  bookings = carBookingService.getCarBookingByUser(UUID.fromString(selectedUserID));
+        if(bookings.isEmpty()){
             System.out.println("Selected user doesn't have any booking");
             return;
         }
@@ -197,8 +211,8 @@ public class Main {
     }
 
     private static void viewAllBookings(CarBookingService carBookingService){
-        CarBooking[] carBookings = carBookingService.getAllBookings();
-        if(carBookings.length == 0){
+        List<CarBooking> carBookings = carBookingService.getAllBookings();
+        if(carBookings.isEmpty()){
             System.out.println("Currently there's no bookings");
             return;
         }
@@ -208,10 +222,11 @@ public class Main {
     }
 
     private static void deleteBooking(CarBookingService carBookingService, Scanner scanner){
-        CarBooking[] carBookings = carBookingService.getAllBookings();
+        List<CarBooking> carBookings = carBookingService.getAllBookings();
         String selectedBooking = "";
         boolean validInput = false;
-        if(carBookings.length == 0){
+
+        if(carBookings.isEmpty()){
             System.out.println("Currently there's no bookings");
             return;
         }
@@ -241,17 +256,17 @@ public class Main {
     private static void viewAvailableCars(CarService carService, CarBookingService carBookingService, boolean onlyElectric){
         System.out.println("View All Available Cars ");
         if(onlyElectric){
-            Car[] cars = carService.getAvailableElectricCars(carBookingService.getAllBookedCars());
-            if(cars.length == 0)
+            List<Car> eCars = carService.getAvailableElectricCars(carBookingService.getAllBookedCars());
+            if(eCars.isEmpty())
                 System.out.println("Electric Cars Not found");
             else{
-                for(Car car : cars)
+                for(Car car : eCars)
                     System.out.println(car.toString());
             }
         }
         else{
-            Car[] cars = carService.getAvailableCars(carBookingService.getAllBookedCars());
-            if(cars.length == 0)
+            List<Car> cars = carService.getAvailableCars(carBookingService.getAllBookedCars());
+            if(cars.isEmpty())
                 System.out.println("Currently there's no Cars Available");
             else{
                 for(Car car : cars)
@@ -266,7 +281,7 @@ public class Main {
         }
     }
 
-    private static Car[] getAllBookedCars(CarBookingService carBookingService) {
+    private static List<Car> getAllBookedCars(CarBookingService carBookingService) {
         return carBookingService.getAllBookedCars();
     }
 }
